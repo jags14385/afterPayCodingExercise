@@ -23,14 +23,21 @@ Execute the task verifyGoogleJavaFormat to verify that all *.java files are form
  ./gradlew verGJF
 
 ## Concepts
-Using HashMap to store
+- Using HashMap to store transactions for a specified hashed Credit Card .
+      -  Then filter accordingly.
+- Go with Concrete classes , until there is a requirement to extract stuff into interfaces.
+      - Dependency Inversion
 
 ## Assumptions
 - InMemory Operations
 - Supply the origin time for the 24hr sliding window
-
+    
 ## To Run the program
 
 ## To Run the tests
+ -- CC with zero transactions
+ -- CC with transactions under the threshold
+ -- CC with transactions over the threshold
+ -- CC with transactions over the threshold , but not in the time window
 
 ## Drawbacks of the Solution in its current form:
