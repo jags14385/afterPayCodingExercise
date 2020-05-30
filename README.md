@@ -31,6 +31,7 @@ Execute the task verifyGoogleJavaFormat to verify that all *.java files are form
 ## Assumptions
 - InMemory Operations
 - Supply the origin time for the 24hr sliding window
+- No TimeZone Conversions required 
     
 ## To Run the program
 
@@ -40,4 +41,10 @@ Execute the task verifyGoogleJavaFormat to verify that all *.java files are form
  -- CC with transactions over the threshold
  -- CC with transactions over the threshold , but not in the time window
 
+## Yet to Build
+-- Hashmap + filter + tests.
+
 ## Drawbacks of the Solution in its current form:
+
+## Resources used 
+-- https://stackoverflow.com/questions/50368493/how-to-parse-yyyy-mm-ddthhmmss-sssxxx-date-format-to-simple-in-android

@@ -4,6 +4,7 @@ import domain.CCTransaction;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class CSVIOService implements IOService {
@@ -27,7 +28,7 @@ public class CSVIOService implements IOService {
         String[] split = lineData[0].split(recordDataDelimiter);
         data.add(new CCTransaction(split[0], split[1], split[2]));
       }
-    } catch (IOException e) {
+    } catch (IOException | ParseException e) {
       e.printStackTrace();
     }
     return data;
