@@ -22,10 +22,12 @@ Execute the task googleJavaFormat to format all *.java files in the project
 Execute the task verifyGoogleJavaFormat to verify that all *.java files are formatted properly
  ./gradlew verGJF
 
-
 ## Concepts
+Using HashMap to store
 
 ## Assumptions
+- InMemory Operations
+- Supply the origin time for the 24hr sliding window
 
 ## To Run the program
 
