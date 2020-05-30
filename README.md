@@ -22,6 +22,7 @@ Execute the task googleJavaFormat to format all *.java files in the project
 Execute the task verifyGoogleJavaFormat to verify that all *.java files are formatted properly
  ./gradlew verGJF
 
+
 ## Concepts
 
 ## Assumptions
