@@ -45,6 +45,7 @@ Execute the task verifyGoogleJavaFormat to verify that all *.java files are form
 -- Hashmap + filter + tests.
 
 ## Drawbacks of the Solution in its current form:
+-- Have introduced a bit more complexity than required , inorder to make the solution extensible.
 
 ## Resources used 
 -- https://stackoverflow.com/questions/50368493/how-to-parse-yyyy-mm-ddthhmmss-sssxxx-date-format-to-simple-in-android
