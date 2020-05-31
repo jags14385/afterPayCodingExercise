@@ -48,8 +48,9 @@ Execute the task verifyGoogleJavaFormat to verify that all *.java files are form
 ## Yet to Build
 -- Hashmap + filter + tests.
 
-## Drawbacks of the Solution in its current form:
--- Have introduced a bit more complexity than required , inorder to make the solution extensible.
+## Drawbacks of the Solution in its current form
+ - Have introduced a bit more complexity than required , inorder to make the solution extensible.
+ - Need to figure out how to improve the complexity in TransactionValidator from O(n*m)
 
-## Resources used 
--- https://stackoverflow.com/questions/50368493/how-to-parse-yyyy-mm-ddthhmmss-sssxxx-date-format-to-simple-in-android
+## Some resources used 
+-- https://stackoverflow.com/questions/50368493/how-to-parse-yyyy-mm-ddthhmmss-sssxxx-date-format-to-simple-in-androidclea
