@@ -29,7 +29,8 @@ public class TransactionValidator implements IValidator {
           upperSectionCounter++) {
         totalSpend = transactions.get(upperSectionCounter).getAmount();
         // More than 1 transactions for Hashed CC
-        for (int ctr = upperSectionCounter + 1; ctr < transactions.size(); ctr++) {
+        int ctr = upperSectionCounter + 1;
+        while (ctr < transactions.size()) {
           Duration duration =
               Duration.between(
                   transactions.get(upperSectionCounter).getDateOfTransaction(),
@@ -38,6 +39,10 @@ public class TransactionValidator implements IValidator {
           if (duration.getSeconds() <= 86400) {
             totalSpend = totalSpend.add(transactions.get(ctr).getAmount());
             ctr++;
+          } else {
+            // Because the transactions are in chronological order, if this particular transaction
+            // duration diff is more than 24hrs, rest of them would be also.
+            break;
           }
         }
         if (totalSpend.compareTo(spendLimit) > 0) {
