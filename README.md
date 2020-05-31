@@ -32,9 +32,11 @@ Execute the task verifyGoogleJavaFormat to verify that all *.java files are form
 - InMemory Operations
 - Supply the origin time for the 24hr sliding window
 - No TimeZone Conversions required 
+- No validation of data required
+- Transactions do not repeat themselves.
     
 ## To Run the program
-
+-  Run new EntryPoint().main();
 ## To Run the tests
  -- CC with zero transactions
  -- CC with transactions under the threshold

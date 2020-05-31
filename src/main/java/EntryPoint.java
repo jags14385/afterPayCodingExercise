@@ -1,9 +1,10 @@
-import domain.CCTransaction;
 import io.CSVIOService;
 import io.IOService;
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import parser.CCTransactionParser;
 import parser.IParser;
+import validation.IValidator;
+import validation.TransactionValidator;
 
 public class EntryPoint {
 
@@ -12,12 +13,8 @@ public class EntryPoint {
 
     IParser parser = new CCTransactionParser();
     IOService ioService = new CSVIOService("src/main/resources/input.csv", parser);
-    ArrayList<CCTransaction> records = ioService.read();
-    for (CCTransaction record : records) {
-      System.out.println("===========");
-      System.out.println("Hashed CC : " + record.getHashedCC());
-      System.out.println("Hashed CC : " + record.getAmount());
-      System.out.println("Hashed CC : " + record.getDateOfTransaction());
-    }
+    IValidator validator = new TransactionValidator(new BigDecimal(15));
+    CCFraudCheckService ccFraudCheckService = new CCFraudCheckService(ioService, validator);
+    ccFraudCheckService.init();
   }
 }

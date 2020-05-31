@@ -32,4 +32,13 @@ public class CSVIOService implements IOService {
     }
     return ccTransactionParser.parse(data);
   }
+
+  public void display(ArrayList<String> fradulentCards) {
+    if (fradulentCards.size() == 0)
+      System.out.println("No fradulent cards found with the specified criteria");
+    else {
+      System.out.println("Fradulent Cards: ");
+      fradulentCards.forEach(System.out::println);
+    }
+  }
 }
