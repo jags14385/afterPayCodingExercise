@@ -8,9 +8,11 @@ import java.util.HashMap;
 
 public class TransactionValidator implements IValidator {
   private final BigDecimal spendLimit;
+  private final int numSecondsIn24Hrs;
 
   public TransactionValidator(BigDecimal spendLimit) {
     this.spendLimit = spendLimit;
+    numSecondsIn24Hrs = 86400;
   }
 
   public ArrayList<String> validate(HashMap<String, ArrayList<CCTransaction>> hashMap) {
@@ -36,7 +38,7 @@ public class TransactionValidator implements IValidator {
                   transactions.get(upperSectionCounter).getDateOfTransaction(),
                   transactions.get(ctr).getDateOfTransaction());
 
-          if (duration.getSeconds() <= 86400) {
+          if (duration.getSeconds() <= numSecondsIn24Hrs) {
             totalSpend = totalSpend.add(transactions.get(ctr).getAmount());
             ctr++;
           } else {

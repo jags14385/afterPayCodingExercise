@@ -1,3 +1,5 @@
+package service;
+
 import domain.CCTransaction;
 import io.IOService;
 import java.util.ArrayList;
@@ -7,6 +9,11 @@ import validation.IValidator;
 public class CCFraudCheckService {
   private final IOService ioService;
   private final IValidator validator;
+
+  public HashMap<String, ArrayList<CCTransaction>> getHashMap() {
+    return hashMap;
+  }
+
   private final HashMap<String, ArrayList<CCTransaction>> hashMap;
 
   public CCFraudCheckService(IOService ioService, IValidator validator) {
