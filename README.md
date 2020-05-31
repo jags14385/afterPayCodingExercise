@@ -33,6 +33,7 @@ Execute the task verifyGoogleJavaFormat to verify that all *.java files are form
 - Supply the origin time for the 24hr sliding window
 - No TimeZone Conversions required 
 - No validation of data required
+- Sliding 24hr window is ongoing i.e. specified date and time onward
 - Transactions do not repeat themselves.
     
 ## To Run the program
