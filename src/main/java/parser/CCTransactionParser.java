@@ -1,7 +1,6 @@
 package parser;
 
 import domain.CCTransaction;
-import java.text.ParseException;
 import java.util.ArrayList;
 
 public class CCTransactionParser implements IParser {
@@ -15,11 +14,7 @@ public class CCTransactionParser implements IParser {
     ArrayList<CCTransaction> data = new ArrayList<>();
     for (String record : records) {
       String[] split = record.split(recordDataDelimiter);
-      try {
-        data.add(new CCTransaction(split[0], split[1], split[2]));
-      } catch (ParseException e) {
-        e.printStackTrace();
-      }
+      data.add(new CCTransaction(split[0], split[1], split[2]));
     }
     return data;
   }
