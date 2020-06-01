@@ -4,11 +4,14 @@ import domain.CCTransaction;
 import io.IOService;
 import java.util.ArrayList;
 import java.util.HashMap;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import validation.IValidator;
 
 public class CCFraudCheckService {
   private final IOService ioService;
   private final IValidator validator;
+  private static final Logger LOGGER = Logger.getLogger(CCFraudCheckService.class);
 
   public HashMap<String, ArrayList<CCTransaction>> getHashMap() {
     return hashMap;
@@ -34,6 +37,7 @@ public class CCFraudCheckService {
       entry.add(record);
       hashMap.put(record.getHashedCC(), entry);
     }
+    LOGGER.log(Level.DEBUG, "CCFraudCheckService initLoad done");
   }
 
   public void init() {

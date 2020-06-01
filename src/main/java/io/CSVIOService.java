@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import parser.IParser;
 
 public class CSVIOService implements IOService {
@@ -13,6 +15,7 @@ public class CSVIOService implements IOService {
   private final String filePath;
   private final String csvRecordDelimiter;
   private final IParser ccTransactionParser;
+  private static final Logger LOGGER = Logger.getLogger(IOService.class);
 
   public CSVIOService(String path, IParser ccTransactionParser) {
     this.filePath = path;
@@ -30,6 +33,7 @@ public class CSVIOService implements IOService {
     } catch (IOException e) {
       e.printStackTrace();
     }
+    LOGGER.log(Level.DEBUG, "CSVIO Service read done");
     return ccTransactionParser.parse(data);
   }
 
@@ -40,5 +44,6 @@ public class CSVIOService implements IOService {
       System.out.println("Fradulent Cards: ");
       fradulentCards.forEach(System.out::println);
     }
+    LOGGER.log(Level.DEBUG, "CSVIO Service write done");
   }
 }

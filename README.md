@@ -35,6 +35,7 @@ Execute the task verifyGoogleJavaFormat to verify that all *.java files are form
     
 ## To Run the program
 - ./gradlew run
+- Check example.log for the logs
 
 ## To Run the tests
  -- ./gradlew clean test
@@ -45,6 +46,7 @@ Execute the task verifyGoogleJavaFormat to verify that all *.java files are form
 ## Drawbacks of the Solution in its current form
  - Have introduced a bit more complexity than required , inorder to make the solution extensible.
  - Need to figure out how to improve the complexity in TransactionValidator from O(n*m)
+ - Need to add exception handling. (Time Constraint)
 
 ## Some resources used 
 -- https://stackoverflow.com/questions/50368493/how-to-parse-yyyy-mm-ddthhmmss-sssxxx-date-format-to-simple-in-androidclea

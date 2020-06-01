@@ -5,10 +5,13 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 public class TransactionValidator implements IValidator {
   private final BigDecimal spendLimit;
   private final int numSecondsIn24Hrs;
+  private static final Logger LOGGER = Logger.getLogger(IValidator.class);
 
   public TransactionValidator(BigDecimal spendLimit) {
     this.spendLimit = spendLimit;
@@ -25,7 +28,7 @@ public class TransactionValidator implements IValidator {
       if (totalSpend.compareTo(spendLimit) > 0) {
         fradulentHashedCCList.add(hashedCC);
       }
-
+      LOGGER.log(Level.DEBUG, "TransactionValidator  transaction Number 1 done");
       for (int upperSectionCounter = 1;
           upperSectionCounter < transactions.size();
           upperSectionCounter++) {
@@ -37,7 +40,7 @@ public class TransactionValidator implements IValidator {
               Duration.between(
                   transactions.get(upperSectionCounter).getDateOfTransaction(),
                   transactions.get(ctr).getDateOfTransaction());
-
+          LOGGER.log(Level.DEBUG, "TransactionValidator  Duration Check:" + duration.getSeconds());
           if (duration.getSeconds() <= numSecondsIn24Hrs) {
             totalSpend = totalSpend.add(transactions.get(ctr).getAmount());
             ctr++;
@@ -53,6 +56,9 @@ public class TransactionValidator implements IValidator {
         }
       }
     }
+    LOGGER.log(
+        Level.DEBUG,
+        "TransactionValidator Number of fradulent Hashed CCList : " + fradulentHashedCCList.size());
     return fradulentHashedCCList;
   }
 }
