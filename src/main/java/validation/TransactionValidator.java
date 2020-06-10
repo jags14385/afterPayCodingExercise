@@ -19,51 +19,59 @@ public class TransactionValidator implements IValidator {
     numSecondsIn24Hrs = 86400;
   }
 
+  private boolean isSpendLimitBreached(BigDecimal totalSpend) {
+    return (totalSpend.compareTo(this.spendLimit) > 0);
+  }
+
+  private boolean isCCFradulent(ArrayList<CCTransaction> transactions, String hashedCC) {
+    CCTransaction trackingTransaction = transactions.get(0);
+    BigDecimal currentTotalSpend = trackingTransaction.getAmount();
+
+    if (isSpendLimitBreached(currentTotalSpend)) {
+      LOGGER.log(Level.DEBUG, "TransactionValidator SpendLimit was breached for CC " + hashedCC);
+      return true;
+    }
+
+    for (CCTransaction transaction : transactions.subList(1, transactions.size())) {
+      Duration duration =
+          Duration.between(
+              transaction.getDateOfTransaction(), trackingTransaction.getDateOfTransaction());
+
+      if (duration.getSeconds() <= numSecondsIn24Hrs) {
+        currentTotalSpend = currentTotalSpend.add(transaction.getAmount());
+        if (isSpendLimitBreached(currentTotalSpend)) {
+          LOGGER.log(
+              Level.DEBUG, "TransactionValidator SpendLimit was breached for CC " + hashedCC);
+          return true;
+        }
+      } else {
+        currentTotalSpend = transaction.getAmount();
+        trackingTransaction = transaction;
+      }
+    }
+    return currentTotalSpend.compareTo(spendLimit) > 0;
+  }
+
   public ArrayList<String> validate(HashMap<String, ArrayList<CCTransaction>> hashMap) {
     ArrayList<String> fradulentHashedCCList = new ArrayList<>();
-
     if (hashMap.size() == 0) {
-      return new ArrayList<>(Collections.singleton("No Transactions"));
+      LOGGER.log(Level.DEBUG, "TransactionValidator No Credit Cards found.");
+      return new ArrayList<>(Collections.singleton("No Credit Cards"));
     }
 
     for (String hashedCC : hashMap.keySet()) {
+      LOGGER.log(
+          Level.DEBUG,
+          "TransactionValidator Transaction Validation initiated for CC : " + hashedCC);
       ArrayList<CCTransaction> transactions = hashMap.get(hashedCC);
-      CCTransaction trackingTransaction = transactions.get(0);
-      BigDecimal totalSpend = trackingTransaction.getAmount();
-      LOGGER.log(Level.DEBUG, "TransactionValidator Transaction for CC " + hashedCC);
-
-      if (totalSpend.compareTo(spendLimit) > 0) {
+      boolean flag = isCCFradulent(transactions, hashedCC);
+      if (flag) {
         fradulentHashedCCList.add(hashedCC);
-        LOGGER.log(Level.DEBUG, "TransactionValidator SpendLimit was breached for CC " + hashedCC);
-        continue;
-      }
-
-      for (CCTransaction transaction : transactions.subList(1, transactions.size())) {
-
-        Duration duration =
-            Duration.between(
-                transaction.getDateOfTransaction(), trackingTransaction.getDateOfTransaction());
-
-        if (duration.getSeconds() <= numSecondsIn24Hrs) {
-          totalSpend = totalSpend.add(transaction.getAmount());
-        } else {
-          totalSpend = transaction.getAmount();
-          trackingTransaction = transaction;
-        }
-
-        if (totalSpend.compareTo(spendLimit) > 0) {
-          LOGGER.log(Level.DEBUG, "TransactionValidator SpendLimit breached for CC " + hashedCC);
-          fradulentHashedCCList.add(hashedCC);
-          break;
-        }
-      }
-
-      if (totalSpend.compareTo(spendLimit) <= 0) {
+      } else {
         LOGGER.log(
             Level.DEBUG, "TransactionValidator SpendLimit never breached for CC " + hashedCC);
       }
     }
-
     LOGGER.log(
         Level.DEBUG,
         "TransactionValidator Number of fradulent Hashed CCList : " + fradulentHashedCCList.size());
