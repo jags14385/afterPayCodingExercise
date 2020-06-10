@@ -31,7 +31,7 @@ public class FradulentHashedCCsSpec {
   public void ShouldReturnFradulentHashedCCs() {
     ArrayList<String> fradulentCards = validator.validate(ccFraudCheckService.getHashMap());
     assertThat(fradulentCards.size(), equalTo(2));
-    assertThat(fradulentCards.contains("10d7ce2f43e35ka57d1bbf8b1f2"), equalTo(true));
-    assertThat(fradulentCards.contains("10d7ce2f43e35fa57d1bbf8b1f2"), equalTo(true));
+    assertThat(fradulentCards.contains("CC2"), equalTo(true));
+    assertThat(fradulentCards.contains("CC3"), equalTo(true));
   }
 }

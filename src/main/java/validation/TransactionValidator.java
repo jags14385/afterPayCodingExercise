@@ -4,6 +4,7 @@ import domain.CCTransaction;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -21,41 +22,48 @@ public class TransactionValidator implements IValidator {
   public ArrayList<String> validate(HashMap<String, ArrayList<CCTransaction>> hashMap) {
     ArrayList<String> fradulentHashedCCList = new ArrayList<>();
 
+    if (hashMap.size() == 0) {
+      return new ArrayList<>(Collections.singleton("No Transactions"));
+    }
+
     for (String hashedCC : hashMap.keySet()) {
       ArrayList<CCTransaction> transactions = hashMap.get(hashedCC);
-      BigDecimal totalSpend = transactions.get(0).getAmount();
-      // Scenario : Where there is only one transaction for a Hashed CC
+      CCTransaction trackingTransaction = transactions.get(0);
+      BigDecimal totalSpend = trackingTransaction.getAmount();
+      LOGGER.log(Level.DEBUG, "TransactionValidator Transaction for CC " + hashedCC);
+
       if (totalSpend.compareTo(spendLimit) > 0) {
         fradulentHashedCCList.add(hashedCC);
+        LOGGER.log(Level.DEBUG, "TransactionValidator SpendLimit was breached for CC " + hashedCC);
+        continue;
       }
-      LOGGER.log(Level.DEBUG, "TransactionValidator  transaction Number 1 done");
-      for (int upperSectionCounter = 1;
-          upperSectionCounter < transactions.size();
-          upperSectionCounter++) {
-        totalSpend = transactions.get(upperSectionCounter).getAmount();
-        // More than 1 transactions for Hashed CC
-        int ctr = upperSectionCounter + 1;
-        while (ctr < transactions.size()) {
-          Duration duration =
-              Duration.between(
-                  transactions.get(upperSectionCounter).getDateOfTransaction(),
-                  transactions.get(ctr).getDateOfTransaction());
-          LOGGER.log(Level.DEBUG, "TransactionValidator  Duration Check:" + duration.getSeconds());
-          if (duration.getSeconds() <= numSecondsIn24Hrs) {
-            totalSpend = totalSpend.add(transactions.get(ctr).getAmount());
-            ctr++;
-          } else {
-            // Because the transactions are in chronological order, if this particular transaction
-            // duration diff is more than 24hrs, rest of them would be also.
-            break;
-          }
+
+      for (CCTransaction transaction : transactions.subList(1, transactions.size())) {
+
+        Duration duration =
+            Duration.between(
+                transaction.getDateOfTransaction(), trackingTransaction.getDateOfTransaction());
+
+        if (duration.getSeconds() <= numSecondsIn24Hrs) {
+          totalSpend = totalSpend.add(transaction.getAmount());
+        } else {
+          totalSpend = transaction.getAmount();
+          trackingTransaction = transaction;
         }
+
         if (totalSpend.compareTo(spendLimit) > 0) {
+          LOGGER.log(Level.DEBUG, "TransactionValidator SpendLimit breached for CC " + hashedCC);
           fradulentHashedCCList.add(hashedCC);
           break;
         }
       }
+
+      if (totalSpend.compareTo(spendLimit) <= 0) {
+        LOGGER.log(
+            Level.DEBUG, "TransactionValidator SpendLimit never breached for CC " + hashedCC);
+      }
     }
+
     LOGGER.log(
         Level.DEBUG,
         "TransactionValidator Number of fradulent Hashed CCList : " + fradulentHashedCCList.size());
